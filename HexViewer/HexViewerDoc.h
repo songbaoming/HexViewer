@@ -55,4 +55,7 @@ public:
 	virtual void DeleteContents();
 	// 获取特定行的内容
 	void GetLineText(UINT uLine, CString & strText);
+	void CloseFile();
+	afx_msg void OnFileOpen();
+	afx_msg void OnCheckFlush();
 };

@@ -125,7 +125,6 @@ BEGIN
     POPUP "文件(&F)"
     BEGIN
         MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
-        MENUITEM "保存(&S)\tCtrl+S",              ID_FILE_SAVE
         MENUITEM "另存为(&A)...",                  ID_FILE_SAVE_AS
         MENUITEM SEPARATOR
         MENUITEM "打印(&P)...\tCtrl+P",           ID_FILE_PRINT
@@ -143,6 +142,10 @@ BEGIN
         MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
         MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+    END
+    POPUP "查看(&C)"
+    BEGIN
+        MENUITEM "刷新(&F)",                      ID_CHECK_FLUSH
     END
     POPUP "视图(&V)"
     BEGIN

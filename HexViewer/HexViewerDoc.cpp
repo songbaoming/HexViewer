@@ -9,6 +9,7 @@
 #include "HexViewer.h"
 #endif
 
+#include "MainFrm.h"
 #include "HexViewerDoc.h"
 
 #include <propkey.h>
@@ -22,6 +23,8 @@
 IMPLEMENT_DYNCREATE(CHexViewerDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CHexViewerDoc, CDocument)
+	ON_COMMAND(ID_FILE_OPEN, &CHexViewerDoc::OnFileOpen)
+	ON_COMMAND(ID_CHECK_FLUSH, &CHexViewerDoc::OnCheckFlush)
 END_MESSAGE_MAP()
 
 
@@ -241,4 +244,33 @@ void CHexViewerDoc::GetLineText(UINT uLine, CString & strText)
 
 	strText = pBuff;
 	delete[] pBuff;
+}
+
+
+
+void CHexViewerDoc::OnFileOpen()
+{
+	CFileDialog dlg(TRUE);
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	DeleteContents();
+	ClearPathName();
+	SetModifiedFlag(FALSE);
+	OnDocumentEvent(CDocument::onAfterCloseDocument);
+
+	AfxGetApp()->OpenDocumentFile(dlg.GetPathName());
+}
+
+
+void CHexViewerDoc::OnCheckFlush()
+{
+	CString strPathName(m_strPathName);
+
+	DeleteContents();
+	ClearPathName();
+	SetModifiedFlag(FALSE);
+	OnDocumentEvent(CDocument::onAfterCloseDocument);
+
+	AfxGetApp()->OpenDocumentFile(strPathName);
 }
