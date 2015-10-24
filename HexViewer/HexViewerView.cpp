@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CHexViewerView, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SETTINGCHANGE()
 	ON_WM_SIZE()
+	ON_COMMAND(ID_CHECK_GOTO, &CHexViewerView::OnCheckGoto)
 END_MESSAGE_MAP()
 
 // CHexViewerView ¹¹Ôì/Îö¹¹
@@ -526,3 +527,9 @@ void CHexViewerView::OnSize(UINT nType, int cx, int cy)
 	ResetScroll();
 }
 
+
+
+void CHexViewerView::OnCheckGoto()
+{
+	MessageBox(TEXT("asdf"));
+}

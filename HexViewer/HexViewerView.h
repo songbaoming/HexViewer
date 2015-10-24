@@ -12,14 +12,14 @@ protected: // 仅从序列化创建
 	CHexViewerView();
 	DECLARE_DYNCREATE(CHexViewerView)
 
-// 特性
+	// 特性
 public:
 	CHexViewerDoc* GetDocument() const;
 
-// 操作
+	// 操作
 public:
 
-// 重写
+	// 重写
 public:
 	virtual void OnDraw(CDC* pDC);  // 重写以绘制该视图
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -28,7 +28,7 @@ protected:
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
-// 实现
+	// 实现
 public:
 	virtual ~CHexViewerView();
 #ifdef _DEBUG
@@ -38,7 +38,7 @@ public:
 
 protected:
 
-// 生成的消息映射函数
+	// 生成的消息映射函数
 protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
@@ -78,10 +78,13 @@ public:
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual void OnInitialUpdate();
+	afx_msg void OnCheckGoto();
 };
 
 #ifndef _DEBUG  // HexViewerView.cpp 中的调试版本
 inline CHexViewerDoc* CHexViewerView::GetDocument() const
-   { return reinterpret_cast<CHexViewerDoc*>(m_pDocument); }
+{
+	return reinterpret_cast<CHexViewerDoc*>(m_pDocument);
+}
 #endif
 

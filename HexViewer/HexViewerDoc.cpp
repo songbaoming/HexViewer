@@ -25,6 +25,7 @@ IMPLEMENT_DYNCREATE(CHexViewerDoc, CDocument)
 BEGIN_MESSAGE_MAP(CHexViewerDoc, CDocument)
 	ON_COMMAND(ID_FILE_OPEN, &CHexViewerDoc::OnFileOpen)
 	ON_COMMAND(ID_CHECK_FLUSH, &CHexViewerDoc::OnCheckFlush)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_FLUSH, &CHexViewerDoc::OnUpdateCheckFlush)
 END_MESSAGE_MAP()
 
 
@@ -78,19 +79,13 @@ void CHexViewerDoc::Serialize(CArchive& ar)
 		//先使用将全部内容读取到内存的办法，以后更改为使用内存映像的方法
 		CFile *pFile = ar.GetFile();
 		m_ullFileLength = pFile->GetLength();
-
-		m_pFileData = new BYTE[m_ullFileLength + 1];
-		if (!m_pFileData)
+		HANDLE hMap = CreateFileMapping(pFile->m_hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+		if (!hMap)
 			return;
-		memset(m_pFileData, 0, m_ullFileLength + 1);
-		try {
-			pFile->Read(m_pFileData, m_ullFileLength);
-		}
-		catch (CFileException *e) {
-			delete[] m_pFileData;
-			m_pFileData = nullptr;
-			m_ullFileLength = 0;
-			throw e;
+		m_pFileData = (BYTE*)MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, 0);
+		if(!m_pFileData){
+			CloseHandle(hMap);
+			return;
 		}
 		m_uLines = (m_ullFileLength + BYTES_ONE_LINE - 1 ) / BYTES_ONE_LINE;
 	}
@@ -172,7 +167,7 @@ void CHexViewerDoc::DeleteContents()
 {
 	// TODO:  在此添加专用代码和/或调用基类
 	if (m_pFileData) {
-		delete[] m_pFileData;
+		UnmapViewOfFile(m_pFileData);
 		m_pFileData = nullptr;
 	}
 	m_ullFileLength = 0;
@@ -265,6 +260,8 @@ void CHexViewerDoc::OnFileOpen()
 
 void CHexViewerDoc::OnCheckFlush()
 {
+	if(m_strPathName.IsEmpty())
+		return;
 	CString strPathName(m_strPathName);
 
 	DeleteContents();
@@ -273,4 +270,10 @@ void CHexViewerDoc::OnCheckFlush()
 	OnDocumentEvent(CDocument::onAfterCloseDocument);
 
 	AfxGetApp()->OpenDocumentFile(strPathName);
+}
+
+
+void CHexViewerDoc::OnUpdateCheckFlush(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(!m_strPathName.IsEmpty());
 }
